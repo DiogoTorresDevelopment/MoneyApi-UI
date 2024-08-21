@@ -1,10 +1,10 @@
-import { MeuprojetoPage } from './app.po';
+import { MoneyApiPage } from './app.po';
 
-describe('meuprojeto App', () => {
-  let page: MeuprojetoPage;
+describe('money-api App', () => {
+  let page: MoneyApiPage;
 
   beforeEach(() => {
-    page = new MeuprojetoPage();
+    page = new MoneyApiPage();
   });
 
   it('should display welcome message', () => {
