@@ -1,22 +1,30 @@
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
 import { AppComponent } from './app.component';
-import { InputTextModule } from 'primeng/components/inputtext/inputtext';
-import { ButtonModule } from 'primeng/components/button/button';
-import { DataTableModule } from 'primeng/components/datatable/datatable';
+
+import { CoreModule } from './core/core.module';
+import { PostingsModule } from './postings/postings.module';
+import { PersonsModule } from './persons/persons.module';
+import { PostingsService } from './postings/postings.service';
+import { HttpModule } from '@angular/http';
+
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
   ],
   imports: [
     BrowserModule,
-    InputTextModule,
-    ButtonModule,
-    DataTableModule,
+    BrowserAnimationsModule,
+    HttpModule,
+
+    CoreModule,
+    PostingsModule,
+    PersonsModule,
   ],
-  providers: [],
+  providers: [PostingsService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

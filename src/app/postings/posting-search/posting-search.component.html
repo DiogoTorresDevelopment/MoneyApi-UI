@@ -1,0 +1,72 @@
+<div class="container">
+  <div class="ui-g">
+    <form autocomplete="off" (ngSubmit)="search()">
+
+      <div class="ui-g-12">
+        <h1>Lançamentos</h1>
+      </div>
+
+      <div class="ui-g-12 ui-fluid">
+        <label>Descrição</label>
+        <input type="text" pInputText name="postingDescription" [(ngModel)]="postingDescription">
+      </div>
+
+      <div class="ui-g-12">
+        <label style="display: block">Vencimento</label>
+        <p-calendar dateFormat="dd/mm/yy" [inputStyle]="{ width: '95px' }"
+        name="dueDateFrom" [(ngModel)]="dueDateFrom"></p-calendar>
+
+        <label>até</label>
+        <p-calendar dateFormat="dd/mm/yy" [inputStyle]="{ width: '95px' }"
+                    name="dueDateTo" [(ngModel)]="dueDateTo"></p-calendar>
+      </div>
+
+      <div class="ui-g-12">
+        <button pButton type="submit" label="Pesquisar"></button>
+      </div>
+    </form>
+  </div>
+
+  <div class="ui-g">
+    <div class="ui-g-12">
+      <p-dataTable [value]="postings" [paginator]="true" [rows]="5"
+                   [responsive]="true" emptyMessage="Nenhum Lançamento encontrado">
+        <p-column field="person" header="Pessoa"></p-column>
+        <p-column field="postingDescription" header="Descrição"></p-column>
+        <p-column header="Vencimento" styleClass="col-date">
+          <ng-template let-post="rowData" pTemplate="body">
+            <span>
+              {{ post.dueDate | date: 'dd/MM/y' }}
+            </span>
+          </ng-template>
+        </p-column>
+        <p-column field="paymentDate" header="Pagamento" styleClass="col-date">
+          <ng-template let-post="rowData" pTemplate="body">
+            <span>
+              {{ post.paymentDate | date: 'dd/MM/y' }}
+            </span>
+          </ng-template>
+        </p-column>
+        <p-column field="postingValue" header="Valor" styleClass="col-price">
+          <ng-template let-post="rowData" pTemplate="body">
+            <span
+              [style.color]="post.postingType === 'DESPESA' ? 'red' : 'blue'" >
+              {{ post.postingValue | number:'1.2-2' }}
+            </span>
+          </ng-template>
+        </p-column>
+        <p-column styleClass="col-actions">
+          <ng-template pTemplate="body">
+            <a pButton icon="fa-pencil" pTooltip="Editar" tooltipPosition="top"></a>
+            <button pButton icon="fa-trash" pTooltip="Excluir" tooltipPosition="top"></button>
+          </ng-template>
+        </p-column>
+      </p-dataTable>
+    </div>
+  </div>
+
+  <div class="ui-g-12">
+    <button pButton label="Novo Lançamento"></button>
+  </div>
+
+</div>
