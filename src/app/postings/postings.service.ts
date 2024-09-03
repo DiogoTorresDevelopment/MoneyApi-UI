@@ -3,10 +3,12 @@ import { Http, Headers, RequestOptions, URLSearchParams } from '@angular/http';
 import 'rxjs/add/operator/toPromise';
 import * as moment from 'moment';
 
-export interface PostingFilter {
+export class PostingFilter {
   postingDescription: string;
   dueDateFrom: Date;
   dueDateTo: Date;
+  page = 0;
+  size = 5;
 }
 
 @Injectable()
@@ -20,6 +22,9 @@ export class PostingsService {
     const params = new URLSearchParams();
     const headers = new Headers();
     headers.append('Authorization', 'Basic YWRtaW5AbW9uZXlhcGkuY29tOmFkbWlu');
+
+    params.set('page', filter.page.toString());
+    params.set('size', filter.size.toString());
 
     if (filter.postingDescription) {
       params.set('postingDescription', filter.postingDescription);
@@ -38,7 +43,18 @@ export class PostingsService {
     const options = new RequestOptions({headers, search: params});
 
     return this.http.get(`${this.postingsURL}?projection`, options).toPromise()
-      .then(response => response.json().content);
+      .then(response => {
+        const respondeJson = response.json();
+        const postings = respondeJson.content;
+
+        const result = {
+          totalElements: respondeJson.totalElements,
+          totalPages: respondeJson.totalPages,
+          content: postings
+        }
+
+        return result;
+      });
   };
 
 }

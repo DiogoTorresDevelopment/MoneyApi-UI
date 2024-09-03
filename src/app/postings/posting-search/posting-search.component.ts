@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { PostingFilter, PostingsService } from '../postings.service';
+import { LazyLoadEvent } from 'primeng/components/common/api';
 
 @Component({
   selector: 'app-posting-search',
@@ -7,27 +8,31 @@ import { PostingFilter, PostingsService } from '../postings.service';
   styleUrls: ['./posting-search.component.css']
 })
 export class PostingSearchComponent implements OnInit {
-  postingDescription: string;
-  dueDateFrom: Date;
-  dueDateTo: Date;
-  postings = [];
 
+
+  totalElements = 0;
+  postings = [];
+  filter = new PostingFilter();
 
   ngOnInit(): void {
-    this.search();
   }
 
   constructor(private postingsService: PostingsService) {
 
   }
 
-  search(): void {
-    const filter: PostingFilter ={
-      postingDescription: this.postingDescription,
-      dueDateFrom: this.dueDateFrom,
-      dueDateTo: this.dueDateTo
-    }
-    this.postingsService.search(filter).then(postings => this.postings = postings);
+  search(page = 0): void {
+
+    this.filter.page = page;
+
+    this.postingsService.search(this.filter).then(result => {
+      this.totalElements = result.totalElements;
+      this.postings = result.content;
+    });
   }
 
+  whenChangingPage(event: LazyLoadEvent) {
+    const page = event.first / event.rows;
+    this.search(page);
+  }
 }

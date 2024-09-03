@@ -8,17 +8,17 @@
 
       <div class="ui-g-12 ui-fluid">
         <label>Descrição</label>
-        <input type="text" pInputText name="postingDescription" [(ngModel)]="postingDescription">
+        <input type="text" pInputText name="postingDescription" [(ngModel)]="filter.postingDescription">
       </div>
 
       <div class="ui-g-12">
         <label style="display: block">Vencimento</label>
         <p-calendar dateFormat="dd/mm/yy" [inputStyle]="{ width: '95px' }"
-        name="dueDateFrom" [(ngModel)]="dueDateFrom"></p-calendar>
+        name="dueDateFrom" [(ngModel)]="filter.dueDateFrom"></p-calendar>
 
         <label>até</label>
         <p-calendar dateFormat="dd/mm/yy" [inputStyle]="{ width: '95px' }"
-                    name="dueDateTo" [(ngModel)]="dueDateTo"></p-calendar>
+                    name="dueDateTo" [(ngModel)]="filter.dueDateTo"></p-calendar>
       </div>
 
       <div class="ui-g-12">
@@ -29,8 +29,13 @@
 
   <div class="ui-g">
     <div class="ui-g-12">
-      <p-dataTable [value]="postings" [paginator]="true" [rows]="5"
-                   [responsive]="true" emptyMessage="Nenhum Lançamento encontrado">
+      <p-dataTable
+        [value]="postings" [responsive]="true"
+        emptyMessage="Nenhum Lançamento encontrado"
+        [paginator]="true" [rows]="filter.size"
+        [lazy]="true" [totalRecords]="totalElements"
+        (onLazyLoad)="whenChangingPage($event)"
+        >
         <p-column field="person" header="Pessoa"></p-column>
         <p-column field="postingDescription" header="Descrição"></p-column>
         <p-column header="Vencimento" styleClass="col-date">
