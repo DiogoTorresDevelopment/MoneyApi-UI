@@ -1,26 +1,61 @@
 <div class="container">
+  <form autocomplete="off" (ngSubmit)="search()">
+    <div class="ui-g">
+      <div class="ui-g-12">
+        <h1>Pessoas</h1>
+      </div>
+
+      <div class="ui-g-12 ui-fluid">
+        <label>Nome</label>
+        <input type="text" pInputText name="personName" [(ngModel)]="filter.personName">
+      </div>
+
+      <div class="ui-g-12">
+        <button pButton type="submit" label="Pesquisar"></button>
+      </div>
+    </div>
+  </form>
+
   <div class="ui-g">
     <div class="ui-g-12">
-      <h1>Pessoas</h1>
-    </div>
-
-    <div class="ui-g-12 ui-fluid">
-      <label>Nome</label>
-      <input type="text" pInputText>
-    </div>
-
-    <div class="ui-g-12">
-      <button pButton type="submit" label="Pesquisar"></button>
-    </div>
-  </div>
-
-  <div class="ui-g">
-    <div class="ui-g-12">
-      <app-persons-grid [persons]="persons" ></app-persons-grid>
+      <p-dataTable
+         [value]="persons" [responsive]="true"
+         emptyMessage="Nenhuma Pessoa encontrada"
+         [paginator]="true" [rows]="filter.size"
+         [lazy]="true" [totalRecords]="totalElements"
+         (onLazyLoad)="whenChangingPage($event)" #table
+      >
+        <p-column field="personName" header="Nome"></p-column>
+        <p-column header="Cidade">
+          <ng-template let-pers="rowData" pTemplate="body">
+            {{pers.address.city}}
+          </ng-template>
+        </p-column>
+        <p-column header="Estado">
+          <ng-template let-pers="rowData" pTemplate="body">
+            {{pers.address.addressState}}
+          </ng-template>
+        </p-column>
+        <p-column header="status">
+          <ng-template let-pers="rowData" pTemplate="body">
+            <a [pTooltip]=" pers.active ? 'Inativar' : 'Ativar'" tooltipPosition="top" (click)="changeState(pers)" style="cursor: pointer">
+              {{ pers.active ? "Ativo" : "Inativo"}}
+            </a>
+          </ng-template>
+        </p-column>
+        <p-column styleClass="col-actions">
+          <ng-template pTemplate="body" let-person="rowData">
+            <a pButton icon="fa-pencil" pTooltip="Editar" tooltipPosition="top"
+               [routerLink]="['/persons', person.id]"></a>
+            <button pButton icon="fa-trash" pTooltip="Excluir" tooltipPosition="top"
+                    (click)="confirmedDelete(person)"></button>
+          </ng-template>
+        </p-column>
+      </p-dataTable>
     </div>
   </div>
 
   <div class="ui-g-12">
-      <button pButton label="Nova Pessoa"></button>
+      <button routerLink="/persons/new" pButton label="Nova Pessoa"></button>
     </div>
 </div>

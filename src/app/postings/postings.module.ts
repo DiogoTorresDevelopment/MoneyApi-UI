@@ -13,14 +13,15 @@ import { DropdownModule } from 'primeng/components/dropdown/dropdown';
 
 import { CurrencyMaskModule } from 'ng2-currency-mask';
 
+import { SharedModule } from '../shared/shared.module';
+
+import { PostingsRoutingModule } from './postings-routing.module';
 import { PostingSearchComponent } from './posting-search/posting-search.component';
 import { PostingRegisterComponent } from './posting-register/posting-register.component';
 
-import { SharedModule } from '../shared/shared.module';
-
 @NgModule({
   declarations: [PostingRegisterComponent, PostingSearchComponent],
-  exports: [PostingRegisterComponent, PostingSearchComponent],
+  exports: [],
   imports: [
     CommonModule,
     FormsModule,
@@ -33,10 +34,10 @@ import { SharedModule } from '../shared/shared.module';
     CalendarModule,
     SelectButtonModule,
     DropdownModule,
-
     CurrencyMaskModule,
 
-    SharedModule
+    SharedModule,
+    PostingsRoutingModule
   ]
 })
 export class PostingsModule { }

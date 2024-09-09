@@ -34,8 +34,8 @@
         emptyMessage="Nenhum Lançamento encontrado"
         [paginator]="true" [rows]="filter.size"
         [lazy]="true" [totalRecords]="totalElements"
-        (onLazyLoad)="whenChangingPage($event)"
-        >
+        (onLazyLoad)="whenChangingPage($event)" #table
+      >
         <p-column field="person" header="Pessoa"></p-column>
         <p-column field="postingDescription" header="Descrição"></p-column>
         <p-column header="Vencimento" styleClass="col-date">
@@ -61,9 +61,11 @@
           </ng-template>
         </p-column>
         <p-column styleClass="col-actions">
-          <ng-template pTemplate="body">
-            <a pButton icon="fa-pencil" pTooltip="Editar" tooltipPosition="top"></a>
-            <button pButton icon="fa-trash" pTooltip="Excluir" tooltipPosition="top"></button>
+          <ng-template pTemplate="body" let-post="rowData">
+            <a pButton icon="fa-pencil" pTooltip="Editar" tooltipPosition="top"
+            [routerLink]="['/postings', post.id]"></a>
+            <button pButton icon="fa-trash" pTooltip="Excluir" tooltipPosition="top"
+            (click)="confirmedDelete(post)"></button>
           </ng-template>
         </p-column>
       </p-dataTable>
@@ -71,7 +73,7 @@
   </div>
 
   <div class="ui-g-12">
-    <button pButton label="Novo Lançamento"></button>
+    <button routerLink="/postings/new" pButton label="Novo Lançamento"></button>
   </div>
 
 </div>

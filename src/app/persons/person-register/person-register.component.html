@@ -1,5 +1,5 @@
 <div class="container">
-  <form autocomplete="off" #personForm="ngForm">
+  <form autocomplete="off" #personForm="ngForm" (submit)="save(personForm)">
 
     <div class="ui-g">
 
@@ -9,8 +9,9 @@
 
       <div class="ui-g-12 ui-fluid">
         <label>Nome</label>
-        <input type="text" pInputText name="personName" #personName="ngModel"
-        required minlength="5" ngModel>
+        <input type="text" pInputText  #personName="ngModel"
+              required minlength="5"
+              name="personName" [(ngModel)]="person.personName">
 
         <app-message [control]="personName" error="required" text="Informe um Nome"></app-message>
         <app-message [control]="personName" error="minlength" text="Mínimo de {{ personName.errors?.minlength?.requiredLength }} caracteres"></app-message>
@@ -19,7 +20,9 @@
 
       <div class="ui-g-12 ui-md-8 ui-fluid">
         <label>Logradouro</label>
-        <input type="text" pInputText name="publicPlace" #publicPlace="ngModel" ngModel required>
+        <input type="text" pInputText
+               #publicPlace="ngModel" required
+               [(ngModel)]="person.address.street" name="publicPlace">
 
         <app-message [control]="publicPlace" error="required" text="Informe um logradouro"></app-message>
 
@@ -27,7 +30,9 @@
 
       <div class="ui-g-12 ui-md-4 ui-fluid">
         <label>Número</label>
-        <input type="text" pInputText required ngModel name="personNumber" #personNumber="ngModel">
+        <input type="text" pInputText
+               [(ngModel)]="person.address.addressNumber" name="personNumber"
+               required #personNumber="ngModel">
 
         <app-message [control]="personNumber" error="required" text="Informe um Numero"></app-message>
 
@@ -35,41 +40,50 @@
 
       <div class="ui-g-12 ui-md-4 ui-fluid">
         <label>Complemento</label>
-        <input type="text" pInputText name="complement" #complement="ngModel" ngModel>
+        <input type="text" pInputText #complement="ngModel"
+               [(ngModel)]="person.address.complement" name="complement">
       </div>
 
       <div class="ui-g-12 ui-md-4 ui-fluid">
         <label>Bairro</label>
-        <input type="text" pInputText ngModel required name="neighborhood" #neighborhood="ngModel">
+        <input type="text" pInputText
+               [(ngModel)]="person.address.district" name="neighborhood"
+               #neighborhood="ngModel" required>
         <app-message [control]="neighborhood" error="required" text="Informe um Bairro"></app-message>
 
       </div>
 
       <div class="ui-g-12 ui-md-4 ui-fluid">
         <label>CEP</label>
-        <p-inputMask mask="99.999-999" required ngModel name="cep" #cep="ngModel"></p-inputMask>
+        <p-inputMask mask="99.999-999"
+           [(ngModel)]="person.address.zipCode" name="cep"
+           required #cep="ngModel"></p-inputMask>
         <app-message [control]="cep" error="required" text="Informe o CEP"></app-message>
 
       </div>
 
       <div class="ui-g-12 ui-md-6 ui-fluid">
         <label>Cidade</label>
-        <input type="text" pInputText required name="city" ngModel #city="ngModel">
+        <input type="text" pInputText
+               name="city" [(ngModel)]="person.address.city"
+               required #city="ngModel">
         <app-message [control]="city" error="required" text="Informe a Cidade"></app-message>
 
       </div>
 
       <div class="ui-g-12 ui-md-6 ui-fluid">
         <label>Estado</label>
-        <input type="text" pInputText ngModel required name="state" #state="ngModel">
+        <input type="text" pInputText
+               [(ngModel)]="person.address.addressState" name="state"
+               #state="ngModel" required>
         <app-message [control]="state" error="required" text="Informe o Estado"></app-message>
 
       </div>
 
       <div class="ui-g-12">
         <button pButton type="submit" label="Salvar" [disabled]="!personForm.valid"></button>
-        <button pButton type="submit" label="Novo" class="ui-button-info"></button>
-        <a href="javascript:;">Voltar para a pesquisa</a>
+        <button pButton type="submit" label="Novo" class="ui-button-info" (click)="new(personForm)"></button>
+        <a routerLink="/persons">Voltar para a pesquisa</a>
       </div>
 
     </div>

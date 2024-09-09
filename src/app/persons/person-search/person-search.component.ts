@@ -1,42 +1,75 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { ConfirmationService, LazyLoadEvent } from 'primeng/components/common/api';
+import { ToastyService } from 'ng2-toasty';
+
+import { PersonFilter, PersonsService } from '../persons.service';
+import { ErrorHandlerService } from '../../core/error-handler.service';
 
 @Component({
   selector: 'app-person-search',
   templateUrl: './person-search.component.html',
   styleUrls: ['./person-search.component.css']
 })
-export class PersonSearchComponent {
+export class PersonSearchComponent implements OnInit {
 
-  persons = [
-    { personName: 'Diogo', active: true, address: {
-        street: 'Rua Maringa',
-        addressNumber: '622',
-        complement: 'Casa amarela',
-        district: 'Centro',
-        zipCode: '85640-000',
-        city: 'Ampére',
-        addressState: 'PR',
-      }
-    },{ personName: 'Pedro', active: true, address: {
-        street: 'Rua XV Novembro',
-        addressNumber: '242',
-        complement: 'Casa',
-        district: 'Nossa Sra das Graças',
-        zipCode: '85640-000',
-        city: 'Ampére',
-        addressState: 'PR',
-      }
-    },{ personName: 'Paulo', active: true, address: {
-        street: 'Rua Guaira',
-        addressNumber: '618',
-        complement: 'Apto 20',
-        district: 'Centro',
-        zipCode: '85640-000',
-        city: 'Ampére',
-        addressState: 'PR',
-      }
-    }
-  ];
+  persons = [];
+  totalElements = 0;
+  filter = new PersonFilter();
+  @ViewChild('table') table;
 
+  ngOnInit() {
 
+  }
+
+  constructor(
+    private personService: PersonsService,
+    private toastyService: ToastyService,
+    private confirmationService: ConfirmationService,
+    private errorHandler: ErrorHandlerService,) { }
+
+  search(page = 0): void {
+    this.filter.page = page;
+
+    this.personService.search(this.filter).then(response => {
+      this.persons = response.content;
+      this.totalElements = response.totalElements;
+    })
+  }
+
+  confirmedDelete(person: any){
+    this.confirmationService.confirm({
+      message: `Deseja excluir: "${person.personName}"?`,
+      accept: () => {
+        this.delete(person);
+      }
+    })
+  }
+
+  delete(person: any) {
+    this.personService.delete(person.id).then(() => {
+      if(this.table.first === 0){
+        this.search();
+      }else{
+        this.table.first = 0;
+      }
+      this.toastyService.success("Pessoa excluído com sucesso!")
+    }).catch(err => this.errorHandler.handle(err));
+
+  }
+
+  whenChangingPage(event: LazyLoadEvent) {
+    const page = event.first / event.rows;
+    this.search(page);
+  }
+
+  changeState(pers: any) {
+    this.personService.changeState(pers.id,pers.active).then(() => {
+      if(this.table.first === 0){
+        this.search();
+      }else{
+        this.table.first = 0;
+      }
+      this.toastyService.success("Alterado status com sucesso!")
+    }).catch(err => this.errorHandler.handle(err));;
+  }
 }

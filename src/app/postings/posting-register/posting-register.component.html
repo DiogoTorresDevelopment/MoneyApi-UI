@@ -1,32 +1,40 @@
 <div class="container">
-  <form autocomplete="off" #postingForm="ngForm">
+  <form autocomplete="off" #postingForm="ngForm" (ngSubmit)="save(postingForm)">
 
     <div class="ui-g">
       <div class="ui-g-12">
-        <h1>Novo Lançamento</h1>
+        <h1>{{ getEditing() ? 'Edição de' : 'Novo' }} Lançamento</h1>
       </div>
 
       <div class="ui-g-12">
-        <p-selectButton  [options]="types" #type></p-selectButton>
-
+        <p-selectButton  [options]="types" #type
+        [(ngModel)]="posting.postingType"
+        name="type"></p-selectButton>
       </div>
 
       <div class="ui-g-6 ui-md-3 ui-fluid">
         <label>Vencimento</label>
-        <p-calendar dateFormat="dd/mm/yy" [inline]="false" [readonlyInput]="false"
-        [showIcon]="false" name="dueDate" ngModel #dueDate="ngModel" required></p-calendar>
+        <p-calendar dateFormat="dd/mm/yy" [inline]="false"
+          [readonlyInput]="false" [showIcon]="false" name="dueDate"
+          [(ngModel)]="posting.dueDate" #dueDate="ngModel" required></p-calendar>
 
         <app-message [control]="dueDate" error="required" text="Informe uma Data"></app-message>
       </div>
 
       <div class="ui-g-6 ui-md-3 ui-fluid">
         <label>{{ type.value === 'RECEITA' ? 'Recebimento' : 'Pagamento' }}</label>
-        <p-calendar dateFormat="dd/mm/yy"></p-calendar>
+        <p-calendar dateFormat="dd/mm/yy"
+        [inline]="false" readonlyInput="false" showIcon="false"
+        name="paymentDate" [(ngModel)]="posting.paymentDate"
+        #paymentDate="ngModel"
+        ></p-calendar>
       </div>
 
       <div class="ui-g-12 ui-md-9 ui-fluid">
         <label>Descrição</label>
-        <input type="text" pInputText name="description" ngModel #description="ngModel" required minlength="5">
+        <input type="text" pInputText
+               name="description" [(ngModel)]="posting.postingDescription"
+               #description="ngModel" required minlength="5">
 
         <app-message [control]="description" error="required" text="Informe uma descrição"></app-message>
         <app-message [control]="description" error="minlength" text="Mínimo de {{ description.errors?.minlength?.requiredLength }} caracteres"></app-message>
@@ -35,8 +43,11 @@
 
       <div class="ui-g-12 ui-md-3 ui-fluid">
         <label>Valor</label>
-        <input currencyMask [options]="{ prefix: '', thousands: '.' , decimal: ',', allowNegative: false }" type="text" pInputText placeholder="0,00"
-               name="price" ngModel  #price="ngModel" required>
+        <input currencyMask
+               [options]="{ prefix: '', thousands: '.' , decimal: ',', allowNegative: false }"
+               type="text" pInputText placeholder="0,00"
+               name="price" [(ngModel)]="posting.postingValue"
+               #price="ngModel" required>
 
         <app-message [control]="price" error="required" text="Informe um Preco"></app-message>
 
@@ -44,7 +55,9 @@
 
       <div class="ui-g-12 ui-md-6 ui-fluid">
         <label>Categoria</label>
-        <p-dropdown placeholder="Selecione" [options]="categories" [autoWidth]="false" #category="ngModel" required ngModel name="category"></p-dropdown>
+        <p-dropdown placeholder="Selecione" [options]="categories" [autoWidth]="false"
+                    name="category" [(ngModel)]="posting.category.id"
+                    #category="ngModel" required ></p-dropdown>
 
         <app-message [control]="category" error="required" text="Informe uma Categoria"></app-message>
 
@@ -52,20 +65,25 @@
 
       <div class="ui-g-12 ui-md-6 ui-fluid">
         <label>Pessoa</label>
-        <p-dropdown name="person" [filter]="true" placeholder="Selecione" [options]="persons" [autoWidth]="false" #person="ngModel" ngModel required></p-dropdown>
+        <p-dropdown [filter]="true" placeholder="Selecione" [options]="persons" [autoWidth]="false"
+                    name="person" [(ngModel)]="posting.person.id"
+                    #person="ngModel" required></p-dropdown>
         <app-message [control]="person" error="required" text="Informe uma Pessoa"></app-message>
 
       </div>
 
       <div class="ui-g-12 ui-fluid">
         <label>Observação</label>
-        <textarea pInputTextarea rows="3"></textarea>
+        <textarea pInputTextarea rows="3"
+        name="note" [(ngModel)]="posting.note"
+        ></textarea>
       </div>
 
       <div class="ui-g-12">
         <button pButton type="submit" label="Salvar" [disabled]="!postingForm.valid"></button>
-        <button pButton type="submit" label="Novo" class="ui-button-info"></button>
-        <a href="javascript:;">Voltar para a pesquisa</a>
+        <button pButton type="submit" label="Novo" class="ui-button-info"
+        (click)="new(postingForm)"></button>
+        <a routerLink="/postings">Voltar para a pesquisa</a>
       </div>
 
     </div>

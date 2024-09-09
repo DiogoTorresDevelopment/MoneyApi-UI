@@ -43,5 +43,8 @@
   color: #fff;
 }
 
+.navbar-menuItem.active {
+  background-color: #494541;
+}
 
 

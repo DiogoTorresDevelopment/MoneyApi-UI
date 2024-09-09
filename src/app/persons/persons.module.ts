@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
-
 import { InputTextModule } from 'primeng/components/inputtext/inputtext';
 import { ButtonModule } from 'primeng/components/button/button';
 import { DataTableModule } from 'primeng/components/datatable/datatable';
@@ -13,13 +12,11 @@ import { SelectButtonModule } from 'primeng/components/selectbutton/selectbutton
 import { DropdownModule } from 'primeng/components/dropdown/dropdown';
 import { InputMaskModule } from 'primeng/components/inputmask/inputmask';
 
-
-
-import { PersonsGridComponent } from './persons-grid/persons-grid.component';
 import { PersonRegisterComponent } from './person-register/person-register.component';
 import { PersonSearchComponent } from './person-search/person-search.component';
 
 import { SharedModule } from '../shared/shared.module';
+import { PersonsRoutingModule } from './persons-routing.module';
 
 @NgModule({
   imports: [
@@ -36,9 +33,10 @@ import { SharedModule } from '../shared/shared.module';
     DropdownModule,
     InputMaskModule,
 
-    SharedModule
+    SharedModule,
+    PersonsRoutingModule
   ],
-  declarations: [PersonsGridComponent, PersonRegisterComponent, PersonSearchComponent],
-  exports: [PersonRegisterComponent, PersonSearchComponent]
+  declarations: [PersonRegisterComponent, PersonSearchComponent],
+  exports: []
 })
 export class PersonsModule { }
