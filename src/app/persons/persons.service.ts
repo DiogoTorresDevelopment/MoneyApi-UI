@@ -4,6 +4,7 @@ import { RequestOptions, URLSearchParams } from '@angular/http';
 import 'rxjs/add/operator/toPromise';
 import { Person } from '../core/model';
 import { AuthHttp } from 'angular2-jwt';
+import { environment } from '../../environments/environment';
 
 export class PersonFilter {
   personName: string;
@@ -15,11 +16,15 @@ export class PersonFilter {
 @Injectable()
 export class PersonsService {
 
+  personsURL:string;
+
+
   constructor(
     private http: AuthHttp,
-  ) { }
+  ) {
+    this.personsURL = `${environment.apiUrl}/person`
+  }
 
-  personsURL = "http://localhost:8080/person";
 
   search(filter: PersonFilter): Promise<any> {
     const params = new URLSearchParams();

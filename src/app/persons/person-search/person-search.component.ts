@@ -4,6 +4,7 @@ import { ToastyService } from 'ng2-toasty';
 
 import { PersonFilter, PersonsService } from '../persons.service';
 import { ErrorHandlerService } from '../../core/error-handler.service';
+import { AuthService } from '../../security/auth.service';
 
 @Component({
   selector: 'app-person-search',
@@ -25,7 +26,8 @@ export class PersonSearchComponent implements OnInit {
     private personService: PersonsService,
     private toastyService: ToastyService,
     private confirmationService: ConfirmationService,
-    private errorHandler: ErrorHandlerService,) { }
+    private errorHandler: ErrorHandlerService,
+    protected auth: AuthService) { }
 
   search(page = 0): void {
     this.filter.page = page;

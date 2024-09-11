@@ -48,7 +48,8 @@
             <a pButton icon="fa-pencil" pTooltip="Editar" tooltipPosition="top"
                [routerLink]="['/persons', person.id]"></a>
             <button pButton icon="fa-trash" pTooltip="Excluir" tooltipPosition="top"
-                    (click)="confirmedDelete(person)"></button>
+                    (click)="confirmedDelete(person)"
+                    [disabled]="!auth.hasPermission('ROLE_DELETE_PERSON')"></button>
           </ng-template>
         </p-column>
       </p-dataTable>

@@ -22,6 +22,7 @@ import { LoginFormComponent } from './login-form/login-form.component';
 import { MoneyHttp } from './money-http';
 import { AuthService } from './auth.service';
 import { AuthGuard } from './auth.guard';
+import { LogoutService } from './logout.service';
 
 export function authHttpServiceFactory(auth: AuthService, http: Http, options: RequestOptions) {
   const config = new AuthConfig({
@@ -59,7 +60,8 @@ export function authHttpServiceFactory(auth: AuthService, http: Http, options: R
       useFactory: authHttpServiceFactory,
       deps: [AuthService, Http, RequestOptions]
     },
-    AuthGuard
+    AuthGuard,
+    LogoutService
   ]
 })
 export class SecurityModule { }

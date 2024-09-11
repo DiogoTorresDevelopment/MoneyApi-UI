@@ -13,6 +13,6 @@
      *ngIf="auth.hasPermission('ROLE_VIEW_POSTING')"><a routerLink="/postings">Lançamentos</a></li>
     <li class="navbar-menuItem" routerLinkActive="active"
       *ngIf="auth.hasPermission('ROLE_VIEW_PERSON')"><a routerLink="/persons">Pessoas</a></li>
-    <li class="navbar-menuItem"><a href="#">Logout</a></li>
+    <li class="navbar-menuItem"><a href="javascript:;" (click)="logout()" >Logout</a></li>
   </ul>
 </nav>

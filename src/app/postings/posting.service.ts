@@ -4,6 +4,7 @@ import 'rxjs/add/operator/toPromise';
 import * as moment from 'moment';
 import { Posting } from '../core/model';
 import { AuthHttp } from 'angular2-jwt';
+import { environment } from '../../environments/environment';
 
 export class PostingFilter {
   postingDescription: string;
@@ -15,10 +16,11 @@ export class PostingFilter {
 
 @Injectable()
 export class PostingService {
+  postingsURL:string;
 
-  constructor(private http: AuthHttp) { }
-
-  postingsURL = "http://localhost:8080/posting";
+  constructor(private http: AuthHttp) {
+    this.postingsURL = `${environment.apiUrl}/posting`
+  }
 
   search(filter: PostingFilter): Promise<any> {
     const params = new URLSearchParams();

@@ -28,7 +28,7 @@ export class PostingSearchComponent implements OnInit {
     private confirmationService: ConfirmationService,
     private errorHandler: ErrorHandlerService,
     private title: Title,
-    private auth: AuthService
+    protected auth: AuthService
   ) {}
 
   ngOnInit(): void {
