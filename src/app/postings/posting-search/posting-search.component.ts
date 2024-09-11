@@ -6,6 +6,7 @@ import { ToastyService } from 'ng2-toasty';
 import { PostingFilter, PostingService } from '../posting.service';
 import { ErrorHandlerService } from '../../core/error-handler.service';
 import { Title } from '@angular/platform-browser';
+import { AuthService } from '../../security/auth.service';
 
 @Component({
   selector: 'app-posting-search',
@@ -26,7 +27,8 @@ export class PostingSearchComponent implements OnInit {
     private toastyService: ToastyService,
     private confirmationService: ConfirmationService,
     private errorHandler: ErrorHandlerService,
-    private title: Title
+    private title: Title,
+    private auth: AuthService
   ) {}
 
   ngOnInit(): void {

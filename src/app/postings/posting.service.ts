@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Http, Headers, RequestOptions, URLSearchParams } from '@angular/http';
+import { Headers, RequestOptions, URLSearchParams } from '@angular/http';
 import 'rxjs/add/operator/toPromise';
 import * as moment from 'moment';
 import { Posting } from '../core/model';
+import { AuthHttp } from 'angular2-jwt';
 
 export class PostingFilter {
   postingDescription: string;
@@ -15,14 +16,12 @@ export class PostingFilter {
 @Injectable()
 export class PostingService {
 
-  constructor(private http: Http) { }
+  constructor(private http: AuthHttp) { }
 
   postingsURL = "http://localhost:8080/posting";
 
   search(filter: PostingFilter): Promise<any> {
     const params = new URLSearchParams();
-    const headers = new Headers();
-    headers.append('Authorization', 'Basic YWRtaW5AbW9uZXlhcGkuY29tOmFkbWlu');
 
     params.set('page', filter.page.toString());
     params.set('size', filter.size.toString());
@@ -41,7 +40,7 @@ export class PostingService {
       );
     }
 
-    const options = new RequestOptions({headers, search: params});
+    const options = new RequestOptions({ search: params});
 
     return this.http.get(`${this.postingsURL}?projection`, options).toPromise()
       .then(response => {
@@ -59,41 +58,29 @@ export class PostingService {
   };
 
   delete(id: number): Promise<void> {
-    const params = new URLSearchParams();
-    const headers = new Headers();
-    headers.append('Authorization', 'Basic YWRtaW5AbW9uZXlhcGkuY29tOmFkbWlu');
-    const options = new RequestOptions({headers, search: params});
 
-    return this.http.delete(`${this.postingsURL}/${id}`, options)
+    return this.http.delete(`${this.postingsURL}/${id}`)
       .toPromise()
       .then(() => null);
   }
 
   save(posting: Posting): Promise<Posting> {
-    const headers = new Headers();
-    headers.append('Authorization', 'Basic YWRtaW5AbW9uZXlhcGkuY29tOmFkbWlu');
-    headers.append('Content-Type', 'application/json');
 
-    return this.http.post(`${this.postingsURL}`, JSON.stringify(posting), {headers})
+    return this.http.post(`${this.postingsURL}`, JSON.stringify(posting))
       .toPromise()
       .then(response => response.json());
   }
 
   update(posting: Posting): Promise<Posting>{
-    const headers = new Headers();
-    headers.append('Authorization', 'Basic YWRtaW5AbW9uZXlhcGkuY29tOmFkbWlu');
-    headers.append('Content-Type', 'application/json');
 
-    return this.http.put(`${this.postingsURL}/${posting.id}`, JSON.stringify(posting), {headers})
+    return this.http.put(`${this.postingsURL}/${posting.id}`, JSON.stringify(posting))
      .toPromise()
      .then(response => response.json());
   }
 
   findById(id: number): Promise<Posting> {
-    const headers = new Headers();
-    headers.append('Authorization', 'Basic YWRtaW5AbW9uZXlhcGkuY29tOmFkbWlu');
 
-    return this.http.get(`${this.postingsURL}/${id}`, { headers })
+    return this.http.get(`${this.postingsURL}/${id}`)
       .toPromise()
       .then(response => this.convertStringToDate(response.json()));
   }

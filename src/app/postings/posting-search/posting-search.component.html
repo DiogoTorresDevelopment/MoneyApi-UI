@@ -65,7 +65,7 @@
             <a pButton icon="fa-pencil" pTooltip="Editar" tooltipPosition="top"
             [routerLink]="['/postings', post.id]"></a>
             <button pButton icon="fa-trash" pTooltip="Excluir" tooltipPosition="top"
-            (click)="confirmedDelete(post)"></button>
+            (click)="confirmedDelete(post)" [disabled]="!auth.hasPermission('ROLE_DELETE_POSTING')" ></button>
           </ng-template>
         </p-column>
       </p-dataTable>

@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Http, Headers, RequestOptions, URLSearchParams } from '@angular/http';
+import { RequestOptions, URLSearchParams } from '@angular/http';
 
 import 'rxjs/add/operator/toPromise';
 import { Person } from '../core/model';
+import { AuthHttp } from 'angular2-jwt';
 
 export class PersonFilter {
   personName: string;
@@ -15,15 +16,13 @@ export class PersonFilter {
 export class PersonsService {
 
   constructor(
-    private http: Http,
+    private http: AuthHttp,
   ) { }
 
   personsURL = "http://localhost:8080/person";
 
   search(filter: PersonFilter): Promise<any> {
     const params = new URLSearchParams();
-    const headers = new Headers();
-    headers.append('Authorization', 'Basic YWRtaW5AbW9uZXlhcGkuY29tOmFkbWlu');
 
     params.set('page', filter.page.toString());
     params.set('size', filter.size.toString());
@@ -31,8 +30,7 @@ export class PersonsService {
     if (filter.personName) {
       params.set('personName', filter.personName);
     }
-
-    const options = new RequestOptions({headers, search: params});
+    const options = new RequestOptions({ search: params});
 
     return this.http.get(`${this.personsURL}?`, options).toPromise()
      .then(response => {
@@ -51,45 +49,29 @@ export class PersonsService {
   }
 
   delete(id: number): Promise<void> {
-    const params = new URLSearchParams();
-    const headers = new Headers();
-    headers.append('Authorization', 'Basic YWRtaW5AbW9uZXlhcGkuY29tOmFkbWlu');
-    const options = new RequestOptions({headers, search: params});
 
-    return this.http.delete(`${this.personsURL}/${id}`, options)
+    return this.http.delete(`${this.personsURL}/${id}`)
       .toPromise()
       .then(() => null)
       .catch(error => console.error('Error deleting person', error));
   }
 
   findAll(): Promise<any> {
-    const headers = new Headers();
-    headers.append('Authorization', 'Basic YWRtaW5AbW9uZXlhcGkuY29tOmFkbWlu');
 
-    const options = new RequestOptions({ headers });
-
-    return this.http.get(`${this.personsURL}`, options).toPromise()
+    return this.http.get(`${this.personsURL}`).toPromise()
      .then(response => response.json().content);
   }
 
   findById(id: number): Promise<Person>{
-    const headers = new Headers();
-    headers.append('Authorization', 'Basic YWRtaW5AbW9uZXlhcGkuY29tOmFkbWlu');
 
-    return this.http.get(`${this.personsURL}/${id}`, { headers })
+    return this.http.get(`${this.personsURL}/${id}`)
      .toPromise()
      .then(response => response.json());
   }
 
   changeState(id: number, active: boolean): Promise<void> {
-    const headers = new Headers({
-      'Authorization': 'Basic YWRtaW5AbW9uZXlhcGkuY29tOmFkbWlu',
-      'Content-Type': 'application/json'
-    });
 
-    const options = new RequestOptions({ headers });
-
-    return this.http.put(`${this.personsURL}/${id}/active`, JSON.stringify(!active), options)
+    return this.http.put(`${this.personsURL}/${id}/active`, JSON.stringify(!active))
       .toPromise()
       .then(() => null)
       .catch(error => console.error('Error changing state of person', error));
@@ -97,23 +79,14 @@ export class PersonsService {
   }
 
   save(person: Person): Promise<Person> {
-    const headers = new Headers({
-      'Authorization': 'Basic YWRtaW5AbW9uZXlhcGkuY29tOmFkbWlu',
-      'Content-Type': 'application/json'
-    });
 
-    return this.http.post(this.personsURL, JSON.stringify(person), { headers })
+    return this.http.post(this.personsURL, JSON.stringify(person))
      .toPromise()
      .then(response => response.json());
   }
 
   update(person: Person): Promise<Person> {
-    const headers = new Headers({
-      'Authorization': 'Basic YWRtaW5AbW9uZXlhcGkuY29tOmFkbWlu',
-      'Content-Type': 'application/json'
-    });
-
-    return this.http.put(`${this.personsURL}/${person.id}`, JSON.stringify(person), { headers })
+    return this.http.put(`${this.personsURL}/${person.id}`, JSON.stringify(person))
      .toPromise()
      .then(response => response.json());
   }
