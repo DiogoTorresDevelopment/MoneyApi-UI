@@ -1,10 +1,11 @@
 import { LOCALE_ID, NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, registerLocaleData } from '@angular/common';
 import { Title } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
+import localePt from '@angular/common/locales/pt';
 
-import { ConfirmDialogModule } from 'primeng/components/confirmdialog/confirmdialog';
-import { ConfirmationService } from 'primeng/components/common/api';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ConfirmationService } from 'primeng/api';
 import { ToastyModule } from 'ng2-toasty';
 import { JwtHelper } from 'angular2-jwt';
 
@@ -16,6 +17,8 @@ import { CategoryService } from '../categories/category.service';
 import { PageNotFoundComponent } from './page-not-found.component';
 import { PageNoAuthorized } from './page-no-authorized.component';
 import { AuthService } from '../security/auth.service';
+
+registerLocaleData(localePt);
 
 @NgModule({
   imports: [
@@ -43,7 +46,7 @@ import { AuthService } from '../security/auth.service';
     ConfirmationService,
     JwtHelper,
     Title,
-    { provide: LOCALE_ID, useValue: 'pt-BR' }
+    { provide: LOCALE_ID, useValue: 'pt' }
   ]
 })
 export class CoreModule { }
