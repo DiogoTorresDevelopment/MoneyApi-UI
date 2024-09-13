@@ -1,23 +1,22 @@
 import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
 
-import { PostingsRoutingModule } from './postings/postings-routing.module';
-import { PersonsRoutingModule } from './persons/persons-routing.module';
 import { SecurityRoutingModule } from './security/security-routing.module';
 import { PageNoAuthorized } from './core/page-no-authorized.component';
 import { PageNotFoundComponent } from './core/page-not-found.component';
 
 const routes: Routes = [
+  { path: 'postings', loadChildren: 'app/postings/postings.module#PostingsModule' },
+  { path: 'persons', loadChildren: 'app/persons/persons.module#PersonsModule' },
   { path: '', redirectTo: 'postings', pathMatch: 'full' },
   { path: 'page-no-authorized', component: PageNoAuthorized },
-  { path: '**', component: PageNotFoundComponent },
+  { path: 'page-not-found', component: PageNotFoundComponent },
+  { path: '**', redirectTo: 'page-not-found' },
 ];
 
 @NgModule({
   imports: [
     RouterModule.forRoot(routes),
-    PostingsRoutingModule,
-    PersonsRoutingModule,
     SecurityRoutingModule
   ],
   exports: [RouterModule]

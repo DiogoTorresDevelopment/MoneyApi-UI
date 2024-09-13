@@ -38,6 +38,18 @@ label {
   text-align: center;
 }
 
+.col-price-header {
+  width:120px;
+}
+
+.col-date-header {
+  width:120px;
+}
+
+.col-actions-header {
+  width:90px;
+}
+
 .ui-dropdown-filter-container {
   width: 100%;
 }

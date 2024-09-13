@@ -18,41 +18,56 @@
 
   <div class="ui-g">
     <div class="ui-g-12">
-      <p-dataTable
+      <p-table
          [value]="persons" [responsive]="true"
-         emptyMessage="Nenhuma Pessoa encontrada"
          [paginator]="true" [rows]="filter.size"
          [lazy]="true" [totalRecords]="totalElements"
          (onLazyLoad)="whenChangingPage($event)" #table
       >
-        <p-column field="personName" header="Nome"></p-column>
-        <p-column header="Cidade">
-          <ng-template let-pers="rowData" pTemplate="body">
-            {{pers.address.city}}
-          </ng-template>
-        </p-column>
-        <p-column header="Estado">
-          <ng-template let-pers="rowData" pTemplate="body">
-            {{pers.address.addressState}}
-          </ng-template>
-        </p-column>
-        <p-column header="status">
-          <ng-template let-pers="rowData" pTemplate="body">
-            <a [pTooltip]=" pers.active ? 'Inativar' : 'Ativar'" tooltipPosition="top" (click)="changeState(pers)" style="cursor: pointer">
-              {{ pers.active ? "Ativo" : "Inativo"}}
-            </a>
-          </ng-template>
-        </p-column>
-        <p-column styleClass="col-actions">
-          <ng-template pTemplate="body" let-person="rowData">
-            <a pButton icon="fa-pencil" pTooltip="Editar" tooltipPosition="top"
-               [routerLink]="['/persons', person.id]"></a>
-            <button pButton icon="fa-trash" pTooltip="Excluir" tooltipPosition="top"
-                    (click)="confirmedDelete(person)"
-                    [disabled]="!auth.hasPermission('ROLE_DELETE_PERSON')"></button>
-          </ng-template>
-        </p-column>
-      </p-dataTable>
+
+        <ng-template pTemplate="header">
+          <tr>
+            <th>Nome</th>
+            <th>Cidade</th>
+            <th>Estado</th>
+            <th>Status</th>
+            <th></th>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-person>
+          <tr>
+            <td>{{ person.personName }}</td>
+            <td>{{ person.address.city }}</td>
+            <td>{{ person.address.addressState }}</td>
+            <td>
+              <a *ngIf="auth.hasPermission('ROLE_UPDATE_PERSON')" [pTooltip]=" person.active ? 'Inativar' : 'Ativar'" tooltipPosition="top" (click)="changeState(person)" style="cursor: pointer">
+                {{ person.active ? "Ativo" : "Inativo"}}
+              </a>
+
+              {{ !auth.hasPermission('ROLE_UPDATE_PERSON') ? person.active ? "Ativo" : "Inativo" : null }}
+
+            </td>
+            <td>
+              <button pButton icon="fa-pencil" pTooltip="Editar" tooltipPosition="top"
+                      [routerLink]="['/persons', person.id]"
+                      [disabled]="!auth.hasPermission('ROLE_UPDATE_PERSON')"></button>
+              <button pButton icon="fa-trash" pTooltip="Excluir" tooltipPosition="top"
+                      (click)="confirmedDelete(person)"
+                      [disabled]="!auth.hasPermission('ROLE_DELETE_PERSON')"></button>
+            </td>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="6">
+              Nenhuma Pessoa encontrada
+            </td>
+          </tr>
+        </ng-template>
+
+      </p-table>
     </div>
   </div>
 

@@ -29,46 +29,55 @@
 
   <div class="ui-g">
     <div class="ui-g-12">
-      <p-dataTable
+      <p-table
         [value]="postings" [responsive]="true"
-        emptyMessage="Nenhum Lançamento encontrado"
         [paginator]="true" [rows]="filter.size"
         [lazy]="true" [totalRecords]="totalElements"
         (onLazyLoad)="whenChangingPage($event)" #table
       >
-        <p-column field="person" header="Pessoa"></p-column>
-        <p-column field="postingDescription" header="Descrição"></p-column>
-        <p-column header="Vencimento" styleClass="col-date">
-          <ng-template let-post="rowData" pTemplate="body">
-            <span>
-              {{ post.dueDate | date: 'dd/MM/y' }}
-            </span>
-          </ng-template>
-        </p-column>
-        <p-column field="paymentDate" header="Pagamento" styleClass="col-date">
-          <ng-template let-post="rowData" pTemplate="body">
-            <span>
-              {{ post.paymentDate | date: 'dd/MM/y' }}
-            </span>
-          </ng-template>
-        </p-column>
-        <p-column field="postingValue" header="Valor" styleClass="col-price">
-          <ng-template let-post="rowData" pTemplate="body">
-            <span
-              [style.color]="post.postingType === 'DESPESA' ? 'red' : 'blue'" >
-              {{ post.postingValue | number:'1.2-2' }}
-            </span>
-          </ng-template>
-        </p-column>
-        <p-column styleClass="col-actions">
-          <ng-template pTemplate="body" let-post="rowData">
-            <a pButton icon="fa-pencil" pTooltip="Editar" tooltipPosition="top"
-            [routerLink]="['/postings', post.id]"></a>
-            <button pButton icon="fa-trash" pTooltip="Excluir" tooltipPosition="top"
-            (click)="confirmedDelete(post)" [disabled]="!auth.hasPermission('ROLE_DELETE_POSTING')" ></button>
-          </ng-template>
-        </p-column>
-      </p-dataTable>
+
+        <ng-template pTemplate="header">
+          <tr>
+            <th>Pessoa</th>
+            <th>Descrição</th>
+            <th class="col-date-header">Vencimento</th>
+            <th class="col-date-header">Pagamento</th>
+            <th class="col-price-header">Valor</th>
+            <th class="col-actions-header" ></th>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-posting>
+          <tr>
+            <td>{{ posting.person }}</td>
+            <td>{{ posting.postingDescription }}</td>
+            <td class="col-date" >{{ posting.dueDate | date: 'dd/MM/y' }}</td>
+            <td class="col-date">{{ posting.paymentDate | date: 'dd/MM/y' }}</td>
+            <td class="col-price" [style.color]="posting.postingType === 'DESPESA' ? 'red' : 'blue'">
+              {{ posting.postingValue | number:'1.2-2' }}
+            </td>
+            <td class="col-actions">
+
+              <button pButton icon="fa-pencil" pTooltip="Editar" tooltipPosition="top"
+                      [routerLink]="['/postings', posting.id]"
+                      [disabled]="!auth.hasPermission('ROLE_UPDATE_POSTING')" ></button>
+
+              <button pButton icon="fa-trash" pTooltip="Excluir" tooltipPosition="top"
+                      (click)="confirmedDelete(posting)"
+                      [disabled]="!auth.hasPermission('ROLE_DELETE_POSTING')" ></button>
+            </td>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="6">
+              Nenhum lançamento encontrado!
+            </td>
+          </tr>
+        </ng-template>
+
+      </p-table>
     </div>
   </div>
 

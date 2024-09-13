@@ -6,17 +6,17 @@ import { AuthGuard } from '../security/auth.guard';
 
 const routes: Routes = [
   {
-    path: 'persons',
+    path: '',
     component: PersonSearchComponent,
     canActivate: [ AuthGuard ],
     data:{ roles: ['ROLE_VIEW_PERSON'] }},
   {
-    path: 'persons/new',
+    path: 'new',
     component: PersonRegisterComponent,
     canActivate: [ AuthGuard ],
     data:{ roles: ['ROLE_REGISTER_PERSON'] }},
   {
-    path: 'persons/:id',
+    path: ':id',
     component: PersonRegisterComponent,
     canActivate: [ AuthGuard ],
     data:{ roles: ['ROLE_UPDATE_PERSON'] }

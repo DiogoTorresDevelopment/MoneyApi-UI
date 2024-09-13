@@ -77,26 +77,41 @@ export class PostingService {
 
     return this.http.put(`${this.postingsURL}/${posting.id}`, JSON.stringify(posting))
      .toPromise()
-     .then(response => response.json());
+      .then(response => {
+        const postingEditing = response.json() as Posting;
+
+        this.convertStringToDate([postingEditing]);
+
+        return postingEditing;
+      });
   }
+
+
 
   findById(id: number): Promise<Posting> {
 
     return this.http.get(`${this.postingsURL}/${id}`)
       .toPromise()
-      .then(response => this.convertStringToDate(response.json()));
+      .then(response => {
+        const posting = response.json() as Posting;
+
+        this.convertStringToDate([posting]);
+
+        return posting;
+      });
   }
 
-  private convertStringToDate(posting: Posting): Posting {
-    if (posting.dueDate) {
-      posting.dueDate = moment(posting.dueDate, 'YYYY/MM/DD').toDate();
-    }
 
-    if (posting.paymentDate) {
-      posting.paymentDate = moment(posting.paymentDate, 'YYYY/MM/DD').toDate();
-    }
+  private convertStringToDate(postings: Posting[]) {
+    for (const posting of postings) {
+      posting.dueDate = moment(posting.dueDate,
+        'YYYY-MM-DD').toDate();
 
-    return posting;
+      if (posting.paymentDate) {
+        posting.paymentDate = moment(posting.paymentDate,
+          'YYYY-MM-DD').toDate();
+      }
+    }
   }
 
 }

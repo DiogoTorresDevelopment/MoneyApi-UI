@@ -7,19 +7,19 @@ import { AuthGuard } from '../security/auth.guard';
 
 const routes: Routes = [
   {
-    path: 'postings',
+    path: '',
     component: PostingSearchComponent,
     canActivate: [ AuthGuard ],
     data:{ roles: ['ROLE_VIEW_POSTING'] }
   },
   {
-    path: 'postings/new',
+    path: 'new',
     component: PostingRegisterComponent,
     canActivate: [ AuthGuard ],
     data:{ roles: ['ROLE_REGISTER_POSTING'] }
   },
   {
-    path: 'postings/:id',
+    path: ':id',
     component: PostingRegisterComponent,
     canActivate: [ AuthGuard ],
     data:{ roles: ['ROLE_UPDATE_POSTING'] }

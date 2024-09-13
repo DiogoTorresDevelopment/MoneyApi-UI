@@ -1,5 +1,5 @@
 <div class="container">
-  <form autocomplete="off" #postingForm="ngForm" (ngSubmit)="save(postingForm)">
+  <form autocomplete="off" (ngSubmit)="save()" [formGroup]="form">
 
     <div class="ui-g">
       <div class="ui-g-12">
@@ -8,36 +8,33 @@
 
       <div class="ui-g-12">
         <p-selectButton  [options]="types" #type
-        [(ngModel)]="posting.postingType"
-        name="type"></p-selectButton>
+        name="type" formControlName="postingType"></p-selectButton>
       </div>
 
       <div class="ui-g-6 ui-md-3 ui-fluid">
         <label>Vencimento</label>
         <p-calendar dateFormat="dd/mm/yy" [inline]="false"
           [readonlyInput]="false" [showIcon]="false" name="dueDate"
-          [(ngModel)]="posting.dueDate" #dueDate="ngModel" required></p-calendar>
+          formControlName="dueDate"></p-calendar>
 
-        <app-message [control]="dueDate" error="required" text="Informe uma Data"></app-message>
+        <app-message [control]="form.get('dueDate')"
+                     error="required" text="Informe uma Data"></app-message>
       </div>
 
       <div class="ui-g-6 ui-md-3 ui-fluid">
-        <label>{{ type.value === 'RECEITA' ? 'Recebimento' : 'Pagamento' }}</label>
+        <label>{{ form.get('postingType').value === 'RECEITA' ? 'Recebimento' : 'Pagamento' }}</label>
         <p-calendar dateFormat="dd/mm/yy"
         [inline]="false" readonlyInput="false" showIcon="false"
-        name="paymentDate" [(ngModel)]="posting.paymentDate"
-        #paymentDate="ngModel"
+        formControlName="paymentDate" name="paymentDate"
         ></p-calendar>
       </div>
 
       <div class="ui-g-12 ui-md-9 ui-fluid">
         <label>Descrição</label>
-        <input type="text" pInputText
-               name="description" [(ngModel)]="posting.postingDescription"
-               #description="ngModel" required minlength="5">
+        <input type="text" pInputText name="description" formControlName="postingDescription">
 
-        <app-message [control]="description" error="required" text="Informe uma descrição"></app-message>
-        <app-message [control]="description" error="minlength" text="Mínimo de {{ description.errors?.minlength?.requiredLength }} caracteres"></app-message>
+        <app-message [control]="form.get('postingDescription')" error="mandatory" text="Informe uma descrição"></app-message>
+        <app-message [control]="form.get('postingDescription')" error="minLength" text="Mínimo de {{ form.get('postingDescription').errors?.minLength?.length }} caracteres"></app-message>
 
       </div>
 
@@ -46,43 +43,36 @@
         <input currencyMask
                [options]="{ prefix: '', thousands: '.' , decimal: ',', allowNegative: false }"
                type="text" pInputText placeholder="0,00"
-               name="price" [(ngModel)]="posting.postingValue"
-               #price="ngModel" required>
+               name="price" formControlName="postingValue">
 
-        <app-message [control]="price" error="required" text="Informe um Preco"></app-message>
+        <app-message [control]="form.get('postingValue')" error="required" text="Informe um Preco"></app-message>
 
       </div>
 
-      <div class="ui-g-12 ui-md-6 ui-fluid">
+      <div class="ui-g-12 ui-md-6 ui-fluid" formGroupName="category">
         <label>Categoria</label>
         <p-dropdown placeholder="Selecione" [options]="categories" [autoWidth]="false"
-                    name="category" [(ngModel)]="posting.category.id"
-                    #category="ngModel" required ></p-dropdown>
-
-        <app-message [control]="category" error="required" text="Informe uma Categoria"></app-message>
+                    name="category" formControlName="id"></p-dropdown>
 
       </div>
 
-      <div class="ui-g-12 ui-md-6 ui-fluid">
+      <div class="ui-g-12 ui-md-6 ui-fluid" formGroupName="person">
         <label>Pessoa</label>
         <p-dropdown [filter]="true" placeholder="Selecione" [options]="persons" [autoWidth]="false"
-                    name="person" [(ngModel)]="posting.person.id"
-                    #person="ngModel" required></p-dropdown>
-        <app-message [control]="person" error="required" text="Informe uma Pessoa"></app-message>
-
+                    name="person" formControlName="id"></p-dropdown>
       </div>
 
       <div class="ui-g-12 ui-fluid">
         <label>Observação</label>
         <textarea pInputTextarea rows="3"
-        name="note" [(ngModel)]="posting.note"
+        name="note" formControlName="note"
         ></textarea>
       </div>
 
       <div class="ui-g-12">
-        <button pButton type="submit" label="Salvar" [disabled]="!postingForm.valid"></button>
+        <button pButton type="submit" label="Salvar" [disabled]="form.invalid"></button>
         <button pButton type="submit" label="Novo" class="ui-button-info"
-        (click)="new(postingForm)"></button>
+        (click)="new()"></button>
         <a routerLink="/postings">Voltar para a pesquisa</a>
       </div>
 

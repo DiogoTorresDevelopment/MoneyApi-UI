@@ -6,8 +6,6 @@ import { HttpModule } from '@angular/http';
 import { AppComponent } from './app.component';
 import { CoreModule } from './core/core.module';
 import { AppRoutingModule } from './app-routing.module';
-import { PostingsModule } from './postings/postings.module';
-import { PersonsModule } from './persons/persons.module';
 import { SecurityModule } from './security/security.module';
 
 @NgModule({
@@ -21,8 +19,6 @@ import { SecurityModule } from './security/security.module';
     AppRoutingModule,
 
     CoreModule,
-    PostingsModule,
-    PersonsModule,
     SecurityModule,
   ],
   providers: [],
