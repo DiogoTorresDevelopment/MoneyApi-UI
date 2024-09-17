@@ -1,88 +1,85 @@
 <div class="container">
-  <form autocomplete="off" #personForm="ngForm" (submit)="save(personForm)">
+  <form autocomplete="off" (ngSubmit)="save()" [formGroup]="form">
 
     <div class="ui-g">
 
       <div class="ui-g-12">
-        <h1>Nova Pessoa</h1>
+        <h1>{{ getEditing() ? 'Edição de' : 'Nova' }} Pessoa</h1>
       </div>
 
       <div class="ui-g-12 ui-fluid">
         <label>Nome</label>
-        <input type="text" pInputText  #personName="ngModel"
-              required minlength="5"
-              name="personName" [(ngModel)]="person.personName">
-
-        <app-message [control]="personName" error="required" text="Informe um Nome"></app-message>
-        <app-message [control]="personName" error="minlength" text="Mínimo de {{ personName.errors?.minlength?.requiredLength }} caracteres"></app-message>
-
-      </div>
-
-      <div class="ui-g-12 ui-md-8 ui-fluid">
-        <label>Logradouro</label>
         <input type="text" pInputText
-               #publicPlace="ngModel" required
-               [(ngModel)]="person.address.street" name="publicPlace">
+              required minlength="5" name="personName"
+               formControlName="personName">
 
-        <app-message [control]="publicPlace" error="required" text="Informe um logradouro"></app-message>
+        <app-message [control]="form.get('personName')" error="required" text="Informe um Nome"></app-message>
+        <app-message [control]="form.get('personName')" error="minlength" text="Mínimo de {{ form.get('personName').errors?.minlength?.requiredLength }} caracteres"></app-message>
 
       </div>
 
-      <div class="ui-g-12 ui-md-4 ui-fluid">
+      <div class="ui-g-12 ui-md-8 ui-fluid" formGroupName="address">
+        <label>Logradouro</label>
+        <input type="text" pInputText name="street"
+               formControlName="street" required >
+
+        <app-message [control]="form.get('address.street')" error="required" text="Informe um logradouro"></app-message>
+
+      </div>
+
+      <div class="ui-g-12 ui-md-4 ui-fluid" formGroupName="address">
         <label>Número</label>
         <input type="text" pInputText
-               [(ngModel)]="person.address.addressNumber" name="personNumber"
-               required #personNumber="ngModel">
+               name="addressNumber" formControlName="addressNumber"
+               required >
 
-        <app-message [control]="personNumber" error="required" text="Informe um Numero"></app-message>
+        <app-message [control]="form.get('address.addressNumber')" error="required" text="Informe um Numero"></app-message>
 
       </div>
 
-      <div class="ui-g-12 ui-md-4 ui-fluid">
+      <div class="ui-g-12 ui-md-4 ui-fluid" formGroupName="address">
         <label>Complemento</label>
-        <input type="text" pInputText #complement="ngModel"
-               [(ngModel)]="person.address.complement" name="complement">
+        <input type="text" pInputText formControlName="complement" name="complement">
       </div>
 
-      <div class="ui-g-12 ui-md-4 ui-fluid">
+      <div class="ui-g-12 ui-md-4 ui-fluid" formGroupName="address">
         <label>Bairro</label>
         <input type="text" pInputText
-               [(ngModel)]="person.address.district" name="neighborhood"
-               #neighborhood="ngModel" required>
-        <app-message [control]="neighborhood" error="required" text="Informe um Bairro"></app-message>
+               formControlName="district" name="neighborhood" required>
+        <app-message [control]="form.get('address.district')" error="required" text="Informe um Bairro"></app-message>
 
       </div>
 
-      <div class="ui-g-12 ui-md-4 ui-fluid">
+      <div class="ui-g-12 ui-md-4 ui-fluid" formGroupName="address">
         <label>CEP</label>
         <p-inputMask mask="99.999-999"
-           [(ngModel)]="person.address.zipCode" name="cep"
-           required #cep="ngModel"></p-inputMask>
-        <app-message [control]="cep" error="required" text="Informe o CEP"></app-message>
+           formControlName="zipCode" name="cep"
+           required></p-inputMask>
+        <app-message [control]="form.get('address.zipCode')" error="required" text="Informe o CEP"></app-message>
 
       </div>
 
-      <div class="ui-g-12 ui-md-6 ui-fluid">
+      <div class="ui-g-12 ui-md-6 ui-fluid" formGroupName="address">
         <label>Cidade</label>
         <input type="text" pInputText
-               name="city" [(ngModel)]="person.address.city"
-               required #city="ngModel">
-        <app-message [control]="city" error="required" text="Informe a Cidade"></app-message>
+               name="city" formControlName="city"
+               required>
+        <app-message [control]="form.get('address.city')" error="required" text="Informe a Cidade"></app-message>
 
       </div>
 
-      <div class="ui-g-12 ui-md-6 ui-fluid">
+      <div class="ui-g-12 ui-md-6 ui-fluid" formGroupName="address">
         <label>Estado</label>
         <input type="text" pInputText
-               [(ngModel)]="person.address.addressState" name="state"
-               #state="ngModel" required>
-        <app-message [control]="state" error="required" text="Informe o Estado"></app-message>
+                formControlName="addressState"
+                name="state" required>
+        <app-message [control]="form.get('address.addressState')" error="required" text="Informe o Estado"></app-message>
 
       </div>
 
       <div class="ui-g-12">
-        <button pButton type="submit" label="Salvar" [disabled]="!personForm.valid"></button>
-        <button pButton type="submit" label="Novo" class="ui-button-info" (click)="new(personForm)"></button>
+        <button pButton type="submit" label="Salvar" [disabled]="!form.valid"></button>
+        <button pButton type="submit" label="Novo" class="ui-button-info" (click)="new()"></button>
         <a routerLink="/persons">Voltar para a pesquisa</a>
       </div>
 

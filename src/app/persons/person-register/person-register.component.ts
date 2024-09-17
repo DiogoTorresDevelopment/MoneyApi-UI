@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { FormControl, NgForm } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
+
 
 
 import { Person } from '../../core/model';
@@ -20,6 +21,10 @@ export class PersonRegisterComponent implements OnInit {
 
   person = new Person();
 
+  form: FormGroup;
+
+
+
   constructor(
     private toastyService: ToastyService,
     private errorHandler: ErrorHandlerService,
@@ -27,10 +32,12 @@ export class PersonRegisterComponent implements OnInit {
     private personsService: PersonsService,
     private route: ActivatedRoute,
     private router: Router,
-    private title: Title
+    private title: Title,
+    private formBuilder: FormBuilder
   ) { }
 
   ngOnInit() {
+    this.configurationForm();
     this.title.setTitle("Catastro de Pessoa");
 
     const idPerson = this.route.snapshot.params['id'];
@@ -41,48 +48,67 @@ export class PersonRegisterComponent implements OnInit {
 
   }
 
+  configurationForm() {
+    this.form = this.formBuilder.group({
+      id: [],
+      personName: [null, [Validators.required, Validators.minLength(5)]],
+      address: this.formBuilder.group({
+        street: [null, Validators.required],
+        addressNumber: [null, Validators.required],
+        complement: null,
+        district: [null, Validators.required],
+        zipCode: [null, Validators.required],
+        city: [null, Validators.required],
+        addressState: [null, Validators.required]
+      }),
+      active: true,
+    })
+  }
+
   getEditing(){
-    return Boolean(this.person.id);
+    return Boolean(this.form.get('id').value);
   }
 
   loadLaunch(id: number){
     this.personsService.findById(id)
       .then(person => {
-        this.person = person;
+        this.form.patchValue(person);
         this.updateTitleEdition();
       }).catch(error => this.errorHandler.handle(error));
   }
 
-  create(form: FormControl){
-    this.personsService.save(this.person)
-     .then(() => {
+  create(){
+    this.personsService.save(this.form.value)
+     .then(personSaved => {
         this.toastyService.success('Pessoa cadastrada com sucesso!');
-        form.reset();
-        this.person = new Person();
+
+       this.router.navigate(['/persons', personSaved.id]);
+
       }).catch(err => this.errorHandler.handle(err));
   }
 
-  save(form: FormControl) {
+  save() {
     if(this.getEditing()){
-      this.update(form);
+      this.update();
     }
     else{
-      this.create(form);
+      this.create();
     }
   }
 
-  update(form: FormControl) {
-    this.personsService.update(this.person)
-      .then(person => {
-        this.person = person;
-
+  update() {
+    this.personsService.update(this.form.value)
+      .then(personSaved => {
         this.toastyService.success('Pessoa atualizado com sucesso!');
+
+        this.router.navigate(['/persons', personSaved.id]);
+
         this.updateTitleEdition();
       }).catch(err => this.errorHandler.handle(err));
   }
 
-  new(form: FormControl) {
-    form.reset();
+  new() {
+    this.form.reset();
 
     setTimeout(function() {
       this.person = new Person();
@@ -92,7 +118,7 @@ export class PersonRegisterComponent implements OnInit {
   }
 
   updateTitleEdition(){
-    this.title.setTitle(`Edição da Pessoa: ${this.person.personName}`);
+    this.title.setTitle(`Edição da Pessoa: ${this.form.get('personName').value}`);
   }
 
 
